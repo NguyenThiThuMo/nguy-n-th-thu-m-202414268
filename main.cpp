@@ -8,15 +8,15 @@ using namespace std;
 
 // 1. Khai báo cấu trúc của mỗi File (Node dữ liệu)
 struct F {
-    string n;    // n: name (Tên file)
-    long s;      // s: size (Kích thước file - đơn vị KB/MB)
-    time_t t;    // t: timestamp (Thời gian tạo)
+    string n;    // n: name 
+    long s;      // s: size 
+    time_t t;    // t: timestamp
 
     F(string name, long size, time_t time) : n(name), s(size), t(time) {}
 };
 
 struct Node {
-    F d;         // d: data (Dữ liệu của file)
+    F d;         // d: data 
     Node* next;  // next: Con trỏ trỏ đến file kế tiếp
 
     Node(F file) : d(file), next(nullptr) {}
@@ -25,7 +25,7 @@ struct Node {
 // Quản lý Danh sách liên kết
 class FileList {
 private:
-    Node* h;     // h: head (Con trỏ quản lý đầu danh sách)
+    Node* h;     // h: head
 
 public:
     FileList() : h(nullptr) {}
