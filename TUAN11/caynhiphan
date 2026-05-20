@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+// BIEUTHUC: (a*b+c)/d-(e*f-h)^g
+// KHAI BAO NODE 
+struct Node
+{
+    char data;
+    struct Node *left;
+    struct Node *right;
+};
+
+//TAO NODE
+struct Node* taoNode(char x)
+{
+    struct Node *p;
+
+    p = (struct Node*)malloc(sizeof(struct Node));
+
+    p->data = x;
+    p->left = NULL;
+    p->right = NULL;
+
+    return p;
+}
+
+// KIEM TRA TOAN TU 
+int laToanTu(char x)
+{
+    if(x == '+' || x == '-' || x == '*' || x == '/' || x == '^')
+    {
+        return 1;
+    }
+
+    return 0;
+}
+
+//TAO CAY TU HAU TO 
+struct Node* taoCay(char s[])
+{
+    struct Node* stack[100];
+
+    int top = -1;
+
+    int i = 0;
+
+    while(s[i] != '\0')
+    {
+        char x = s[i];
+
+        // Neu la chu cai hoac so
+        if(isalnum(x))
+        {
+            struct Node *p;
+
+            p = taoNode(x);
+
+            top++;
+            stack[top] = p;
+        }
+
+        // Neu la toan tu
+        else
+        {
+            struct Node *p;
+
+            p = taoNode(x);
+
+            // Lay 2 node tren cung
+            struct Node *right;
+            struct Node *left;
+
+            right = stack[top];
+            top--;
+
+            left = stack[top];
+            top--;
+
+            // Gan nhanh
+            p->left = left;
+            p->right = right;
+
+            // Dua lai vao stack
+            top++;
+            stack[top] = p;
+        }
+
+        i++;
+    }
+
+    return stack[top];
+}
+
+// DUYET TRUOC 
+void preorder(struct Node *root)
+{
+    if(root != NULL)
+    {
+        printf("%c ", root->data);
+
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+// DUYET GIUA
+void inorder(struct Node *root)
+{
+    if(root != NULL)
+    {
+        inorder(root->left);
+
+        printf("%c ", root->data);
+
+        inorder(root->right);
+    }
+}
+
+// DUYET SAU 
+void postorder(struct Node *root)
+{
+    if(root != NULL)
+    {
+        postorder(root->left);
+
+        postorder(root->right);
+
+        printf("%c ", root->data);
+    }
+}
+int main()
+{
+
+    char postfix[] = "ab*c+d/ef*h-g^-";
+
+    struct Node *root;
+
+    root = taoCay(postfix);
+
+    printf("DUYET TRUOC (PREFIX):\n");
+    preorder(root);
+
+    printf("\n\n");
+
+    printf("DUYET GIUA (INFIX):\n");
+    inorder(root);
+
+    printf("\n\n");
+
+    printf("DUYET SAU (POSTFIX):\n");
+    postorder(root);
+
+    return 0;
+}
