@@ -38,11 +38,10 @@ int cungNgay(struct Ngay a, struct Ngay b) {
     return (a.ngay == b.ngay && a.thang == b.thang && a.nam == b.nam);
 }
 
-
 struct SinhVien nhapSV() {
     struct SinhVien sv;
 
-    getchar(); // clear buffer
+    while (getchar() != '\n'); 
 
     printf("Ma SV: ");
     fgets(sv.maSV, sizeof(sv.maSV), stdin);
@@ -58,7 +57,7 @@ struct SinhVien nhapSV() {
     printf("Ngay sinh (ngay thang nam): ");
     scanf("%d %d %d", &sv.ngaySinh.ngay, &sv.ngaySinh.thang, &sv.ngaySinh.nam);
 
-    getchar();
+    while (getchar() != '\n'); 
 
     printf("Dia chi: ");
     fgets(sv.diaChi, sizeof(sv.diaChi), stdin);
@@ -75,7 +74,6 @@ struct SinhVien nhapSV() {
     return sv;
 }
 
-
 void insertSorted(struct List* L, struct SinhVien sv) {
     struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
 
@@ -87,14 +85,12 @@ void insertSorted(struct List* L, struct SinhVien sv) {
     newNode->data = sv;
     newNode->next = NULL;
 
-    // chèn đầu
     if (L->head == NULL || strcmp(sv.maSV, L->head->data.maSV) < 0) {
         newNode->next = L->head;
         L->head = newNode;
         return;
     }
 
-    // tìm vị trí
     struct Node* p = L->head;
     while (p->next != NULL && strcmp(p->next->data.maSV, sv.maSV) < 0) {
         p = p->next;
@@ -104,15 +100,17 @@ void insertSorted(struct List* L, struct SinhVien sv) {
     p->next = newNode;
 }
 
-
 void inDS(struct List L) {
+    if (L.head == NULL) {
+        printf("(Danh sach rong)\n");
+        return;
+    }
     struct Node* p = L.head;
     while (p != NULL) {
         printf("[%s] %s\n", p->data.maSV, p->data.hoTen);
         p = p->next;
     }
 }
-
 
 void inTrungNgay(struct List L) {
     struct Node* p = L.head;
@@ -132,31 +130,43 @@ void inTrungNgay(struct List L) {
     }
 
     if (!found)
-        printf("Khong co SV trung ngay sinh\n");
+        printf("Khong tim thay sinh vien cung ngay sinh\n");
 }
 
 void xoaTrungNgay(struct List* L) {
     struct Node* p = L->head;
 
     while (p != NULL) {
-        struct Node* prev = p;
-        struct Node* q = p->next;
-
+      
+        int trung = 0;
+        struct Node* q = L->head;
         while (q != NULL) {
-            if (cungNgay(p->data.ngaySinh, q->data.ngaySinh)) {
-                prev->next = q->next;
-                free(q);
-                q = prev->next;
+            if (q != p && cungNgay(p->data.ngaySinh, q->data.ngaySinh)) {
+                trung = 1;
+                break;
             }
-            else {
-                prev = q;
-                q = q->next;
-            }
+            q = q->next;
         }
-        p = p->next;
+
+        if (trung) {
+         
+            if (p == L->head) {
+                L->head = p->next;
+                free(p);
+                p = L->head;
+            } else {
+               
+                struct Node* prev = L->head;
+                while (prev->next != p) prev = prev->next;
+                prev->next = p->next;
+                free(p);
+                p = prev->next;
+            }
+        } else {
+            p = p->next;
+        }
     }
 }
-
 
 int main() {
     struct List ds;
@@ -172,39 +182,39 @@ int main() {
         insertSorted(&ds, sv);
     }
 
-    printf("\n--- Danh sach ---\n");
+    printf("Danh sach\n");
     inDS(ds);
 
-    printf("\n--- SV trung ngay sinh ---\n");
+    printf("SV trung ngay sinh \n");
     inTrungNgay(ds);
 
-    printf("\n--- Sau khi xoa ---\n");
+    printf("Sau khi xoa\n");
     xoaTrungNgay(&ds);
     inDS(ds);
 
     return 0;
 }
 
-// TEST CASE 1: Kiểm tra sắp xếp và tìm sinh viên trùng ngày sinh
-// - Nhập n = 3
+// TEST CASE 1: Kiem tra sap xep va tim sinh vien trung ngay sinh
+// - Nhap n = 3
 // - SV 1: MaSV: 102, HoTen: Nguyen Van A, NgaySinh: 15 05 2005
 // - SV 2: MaSV: 101, HoTen: Tran Thi B,   NgaySinh: 15 05 2005
 // - SV 3: MaSV: 103, HoTen: Le Van C,     NgaySinh: 20 10 2005
 
-// => KẾT QUẢ: 
-// 1. Danh sách in ra phải đảo thứ tự 101 trước 102.
-// 2. Thông báo "Tran Thi B và Nguyen Van A trùng ngày sinh".
+// => KET QUA:
+// 1. Danh sach in ra phai dao thu tu 101 truoc 102.
+// 2. Thong bao "Tran Thi B va Nguyen Van A trung ngay sinh".
 
-// TEST CASE 2: Kiểm tra khi không có ai trùng ngày sinh
-// - Nhập n = 2
+// TEST CASE 2: Kiem tra khi khong co ai trung ngay sinh
+// - Nhap n = 2
 // - SV 1: MaSV: A1, HoTen: Sinh Vien X, NgaySinh: 01 01 2000
 // - SV 2: MaSV: A2, HoTen: Sinh Vien Y, NgaySinh: 02 02 2000
 
-// => KẾT QUẢ: In thông báo "Khong tim thay sinh vien cung ngay sinh".
+// => KET QUA: In thong bao "Khong tim thay sinh vien cung ngay sinh".
 
-// TEST CASE 3: Kiểm tra xóa toàn bộ khi tất cả đều trùng ngày sinh
-// - Nhập n = 2
+// TEST CASE 3: Kiem tra xoa toan bo khi tat ca deu trung ngay sinh
+// - Nhap n = 2
 // - SV 1: MaSV: 01, HoTen: An, NgaySinh: 10 10 2005
 // - SV 2: MaSV: 02, HoTen: Binh, NgaySinh: 10 10 2005
 
-// => KẾT QUẢ: Sau khi thực hiện Câu 4, danh sách sẽ hiển thị "(Danh sach rong)".
+// => KET QUA: Sau khi xoa, danh sach se hien thi "(Danh sach rong)".
