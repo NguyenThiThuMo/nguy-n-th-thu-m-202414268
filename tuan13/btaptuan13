@@ -1,0 +1,52 @@
+#include <iostream>
+using namespace std;
+struct node {
+    int gtri;
+    node* trai;
+    node* phai;
+    node(int x) {
+        gtri = x;
+        trai = NULL;
+        phai = NULL;
+    }
+};
+node* them(node* goc, int x) {
+    if (goc == NULL) {
+        return new node(x);
+    }
+    if (x < goc->gtri) {
+        goc->trai = them(goc->trai, x);
+    } else {
+        goc->phai = them(goc->phai, x);
+    }
+    return goc;
+}
+void timkiem(node* goc, int x) {
+    while (1){
+        if (goc == NULL){
+            cout << " Khong tim thay.";
+            return;
+        }
+        if (goc->gtri == x) {
+            cout << " Tim thay.";
+            return;
+        }
+        if (x < goc->gtri)
+            goc = goc->trai;
+        else
+            goc = goc->phai;
+    }
+    
+}
+int main() {
+    int dayso[] = {2001, 2002, 2006, 2007, 2003, 2004, 2005, 2001, 1999, 2004};
+    int n = sizeof(dayso) / sizeof(dayso[0]);
+    node* goc = NULL;
+    for (int i = 0; i < n; i++) {
+        goc = them(goc, dayso[i]);
+    }
+    int k; cout << "Nhap nam sinh can tim: "; cin >> k;
+    cout << "Tim nam sinh " << k << " tren cay:";
+    timkiem(goc, k);
+    return 0;
+}
