@@ -1,8 +1,8 @@
 #include <stdio.h>
-
+//kieu tuan tu
 int main()
 {
-    char tree[20];
+    int tree[20];
 
     tree[1] = '1';
     tree[2] = '2';
@@ -21,3 +21,27 @@ int main()
 
     return 0;
 }
+// kieu moc noi
+// int main()
+// {
+//     struct Node *n1 = taoNode(1);
+//     struct Node *n2 = taoNode(2);
+//     struct Node *n3 = taoNode(3);
+//     struct Node *n4 = taoNode(4);
+//     struct Node *n5 = taoNode(5);
+//     struct Node *n6 = taoNode(6);
+//     struct Node *n7 = taoNode(7);
+
+//     n1->left = n2;
+//     n1->right = n3;
+
+//     n2->left = n4;
+//     n2->right = n5;
+
+//     n3->left = n6;
+//     n3->right = n7;
+
+//     printf("TAO CAY DAY DU THANH CONG");
+
+//     return 0;
+// }
