@@ -1,0 +1,88 @@
+#include <stdio.h>
+
+void inmang(int a[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", a[i]);
+    }
+    printf("\n");
+}
+
+void vundong(int a[], int n, int i) {
+    int max = i;          
+    int trai = 2 * i + 1; 
+    int phai = 2 * i + 2; 
+    
+    if (trai < n && a[trai] > a[max]) {
+        max = trai;
+    }
+    
+    if (phai < n && a[phai] > a[max]) {
+        max = phai;
+    }
+    
+    if (max != i) {
+        int temp = a[i];
+        a[i] = a[max];
+        a[max] = temp;
+        
+        vundong(a, n, max);
+    }
+}
+
+void sapxepvundong(int a[], int n) {
+    int buoc = 1;
+    
+    printf("Giai doan vun dong\n");
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        vundong(a, n, i);
+        printf("Buoc vun dong %d: ", buoc++);
+        inmang(a, n);
+    }
+    
+    printf("\nGiai doan sap xep\n");
+    buoc = 1;
+    for (int i = n - 1; i > 0; i--) {
+       
+        int temp = a[0];
+        a[0] = a[i];
+        a[i] = temp;
+        
+        printf("Buoc sap xep %d (dua %d ve cuoi): ", buoc++, temp);
+        inmang(a, n);
+    
+        vundong(a, i, 0);
+        printf(" Trang thai sau khi lam moi lai dong: ");
+        inmang(a, n);
+        printf("\n");
+    }
+}
+
+int main() {
+    // Vi du tren bang
+    int a1[12] = {11, 10, 32, 106, 38, 78, 203, 16, 84, 17, 39, 15};
+    int n1 = 12;
+    
+    printf("Cac gia tri cay 1: ");
+    inmang(a1, n1);
+    printf("\n");
+    
+    sapxepvundong(a1, n1);
+    
+    printf("\nKet qua cuoi cung cua cay 1: ");
+    inmang(a1, n1);
+    
+    // Vi du trong slide
+    int a2[10] = {4, 1, 3, 2, 16, 9, 10, 14, 8, 7};
+    int n2 = 10;
+    
+    printf("\n\nCac gia tri cay 2: ");
+    inmang(a2, n2);
+    printf("\n");
+    
+    sapxepvundong(a2, n2);
+    
+    printf("\nKet qua cuoi cung cua mang cay 2: ");
+    inmang(a2, n2);
+    
+    return 0;
+}

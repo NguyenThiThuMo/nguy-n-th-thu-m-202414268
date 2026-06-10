@@ -12,8 +12,7 @@ struct node {
 };
 node* them(node* goc, int x) {
     if (goc == NULL) {
-        return new node(x);git add .
-git commit -m "first commit
+        return new node(x);
     }
     if (x < goc->gtri) {
         goc->trai = them(goc->trai, x);

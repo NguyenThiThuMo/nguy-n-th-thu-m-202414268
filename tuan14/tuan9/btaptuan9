@@ -217,4 +217,4 @@ int main() {
 // - SV 1: MaSV: 01, HoTen: An, NgaySinh: 10 10 2005
 // - SV 2: MaSV: 02, HoTen: Binh, NgaySinh: 10 10 2005
 
-// => KET QUA: Sau khi xoa, danh sach se hien thi "(Danh sach rong)".s
+// => KET QUA: Sau khi xoa, danh sach se hien thi "(Danh sach rong)".
