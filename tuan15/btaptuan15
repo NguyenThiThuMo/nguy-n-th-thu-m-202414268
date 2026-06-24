@@ -45,14 +45,14 @@ void BFS(int start) {
         q.pop();
 
         cout << tenTP[u] << " -> ";
-        Node* temp = head[u];
-        while (temp != nullptr) {
-            int v = temp->dest;
+        Node* neighbor = head[u];
+        while (neighbor != nullptr) {
+            int v = neighbor->dest;
             if (!visited[v]) {
                 visited[v] = true;
                 q.push(v);
             }
-            temp = temp->next;
+            neighbor = neighbor->next;
         }
     }
     cout << "END\n";
