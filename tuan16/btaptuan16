@@ -1,0 +1,166 @@
+#include <iostream>
+#include <queue>
+#include <string>
+using namespace std;
+const int MAX = 11;
+string TenTinh[MAX] =
+{
+    "Ha Noi",
+    "Hai Duong",
+    "Hung Yen",
+    "Phu Ly",
+    "Hoa Binh",
+    "Son Tay",
+    "Thai Nguyen",
+    "Bac Ninh",
+    "Bac Giang",
+    "Uong Bi",
+    "Hai Phong"
+};
+int A[MAX][MAX];
+bool visited[MAX];
+void ThemCanh(int u, int v)
+{
+    A[u][v] = 1;
+    A[v][u] = 1;
+}
+void KhoiTaoDoThi()
+{
+    for(int i = 0; i < MAX; i++)
+    {
+        for(int j = 0; j < MAX; j++)
+        {
+            A[i][j] = 0;
+        }
+    }
+ThemCanh(0,1);   // Ha Noi - Hai Duong
+    ThemCanh(1,2);   // Hai Duong - Hung Yen
+    ThemCanh(2,3);   // Hung Yen - Phu Ly
+    ThemCanh(3,0);   // Phu Ly - Ha Noi
+
+    ThemCanh(0,4);   // Hoa Binh
+    ThemCanh(0,5);   // Son Tay
+    ThemCanh(0,6);   // Thai Nguyen
+
+    ThemCanh(0,7);   // Bac Ninh
+    ThemCanh(7,8);   // Bac Giang
+    ThemCanh(8,9);   // Uong Bi
+
+    ThemCanh(7,9);   // Bac Ninh - Uong Bi
+    ThemCanh(9,10);  // Uong Bi - Hai Phong
+
+    ThemCanh(1,10); 
+ } // Hai Duong - Hai Phong
+    bool DFS(int u, int t)
+{
+    visited[u] = true;
+
+    if(u == t)
+        return true;
+
+    for(int v = 0; v < MAX; v++)
+    {
+        if(A[u][v] == 1 && !visited[v])
+        {
+            if(DFS(v, t))
+                return true;
+        }
+    }
+
+    return false;
+}
+void BFS(int s, int t)
+{
+    bool visited[MAX];
+    int parent[MAX];
+
+    for(int i = 0; i < MAX; i++)
+    {
+        visited[i] = false;
+        parent[i] = -1;
+    }
+
+    queue<int> q;
+
+    visited[s] = true;
+    q.push(s);
+
+    while(!q.empty())
+    {
+        int u = q.front();
+        q.pop();
+
+        if(u == t)
+          break;
+
+        for(int v = 0; v < MAX; v++)
+        {
+            if(A[u][v] == 1 && !visited[v])
+            {
+                visited[v] = true;
+                parent[v] = u;
+                q.push(v);
+            }
+        }
+    }
+
+    if(!visited[t])
+    {
+        cout << "\nKhong ton tai duong di!\n";
+        return;
+    }
+    int path[MAX];
+    int cnt = 0;
+
+    int cur = t;
+
+    while(cur != -1)
+    {
+        path[cnt++] = cur;
+        cur = parent[cur];
+    }
+
+    cout << "\nDuong di ngan nhat:\n";
+
+    for(int i = cnt - 1; i >= 0; i--)
+    {
+        cout << TenTinh[path[i]];
+
+        if(i > 0)
+            cout << " -> ";
+    }
+
+    cout << "\nSo canh di qua: " << cnt - 1 << endl;
+}
+void InDanhSachTinh()
+{
+    cout << "\nDANH SACH CAC TINH\n\n";
+
+    for(int i = 0; i < MAX; i++)
+    {
+        cout << i << ". " << TenTinh[i] << endl;
+    }
+}
+int main()
+{
+    KhoiTaoDoThi();
+
+    InDanhSachTinh();
+
+    int start = 0, finish = 10;
+
+    for(int i = 0; i < MAX; i++)
+    {
+        visited[i] = false;
+    }
+cout << "\nKiem tra duong di tu " << TenTinh[start] << " den " << TenTinh[finish] << ":\n";
+
+    if(DFS(start, finish))
+        cout << "Ton tai duong di\n";
+    else
+        cout << "Khong ton tai duong di!\n";
+
+    BFS(start, finish);
+
+    return 0;
+}
