@@ -49,8 +49,8 @@ ThemCanh(0,1);   // Ha Noi - Hai Duong
     ThemCanh(7,9);   // Bac Ninh - Uong Bi
     ThemCanh(9,10);  // Uong Bi - Hai Phong
 
-    ThemCanh(1,10); 
- } // Hai Duong - Hai Phong
+    ThemCanh(1,10); // Hai Duong - Hai Phong
+ } 
     bool DFS(int u, int t)
 {
     visited[u] = true;

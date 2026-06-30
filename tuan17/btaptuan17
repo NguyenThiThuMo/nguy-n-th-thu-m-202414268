@@ -9,7 +9,7 @@ const int INF = 1e9;
 const int MAX = 100;
 
 int G[MAX][MAX]; 
-int n; // So ddinh
+int n; // So dinh 
 
 // 1. Thuat toan Dijkstra
 void Dijkstra(int start) {
