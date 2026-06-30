@@ -1,0 +1,102 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iomanip>
+
+using namespace std;
+
+const int INF = 1e9;
+const int MAX = 100;
+
+int G[MAX][MAX]; 
+int n; // So ddinh
+
+// 1. Thuat toan Dijkstra
+void Dijkstra(int start) {
+    vector<int> dist(n, INF);
+    vector<bool> to(n, false);
+    dist[start] = 0;
+
+    for (int i = 0; i < n; i++) {
+        int u = -1;
+        for (int j = 0; j < n; j++) 
+            if (!to[j] && (u == -1 || dist[j] < dist[u])) u = j;
+        
+        if (dist[u] == INF) break;
+        to[u] = true;
+        for (int v = 0; v < n; v++) 
+            if (G[u][v] && dist[u] + G[u][v] < dist[v]) dist[v] = dist[u] + G[u][v];
+    }
+    cout << "Khoang cach ngan nhat tu dinh " << start << ": ";
+    for (int i = 0; i < n; i++) cout << dist[i] << " ";
+    cout << endl;
+}
+
+void Prim() {
+    int dinh[MAX], key[MAX];
+    bool mstSet[MAX];
+    for (int i = 0; i < n; i++) key[i] = INF, mstSet[i] = false;
+    key[0] = 0; dinh[0] = -1;
+
+    for (int count = 0; count < n - 1; count++) {
+        int u = -1;
+        for (int v = 0; v < n; v++)
+            if (!mstSet[v] && (u == -1 || key[v] < key[u])) u = v;
+        mstSet[u] = true;
+        for (int v = 0; v < n; v++)
+            if (G[u][v] && !mstSet[v] && G[u][v] < key[v]) dinh[v] = u, key[v] = G[u][v];
+    }
+
+    int MST[MAX][MAX] = {0};
+    for (int i = 1; i < n; i++) {
+        MST[i][dinh[i]] = MST[dinh[i]][i] = G[i][dinh[i]];
+    }
+    cout << "Ma tran ke cay khung (Prim):" << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) cout << setw(3) << MST[i][j] << " ";
+        cout << endl;
+    }
+}
+
+struct Edge { int u, v, w; };
+bool compareEdges(Edge a, Edge b) { return a.w < b.w; }
+
+int find(int i, vector<int>& parent) {
+    return (dinh[i] == i) ? i : (đinh[i] = find(dinh[i], dinh));
+}
+
+void Kruskal() {
+    vector<Edge> edges;
+    for (int i = 0; i < n; i++)
+        for (int j = i + 1; j < n; j++)
+            if (G[i][j] != 0) edges.push_back({i, j, G[i][j]});
+    sort(edges.begin(), edges.end(), compareEdges);
+
+    vector<int> parent(n);
+    for (int i = 0; i < n; i++) parent[i] = i;
+
+    int MST[MAX][MAX] = {0};
+    for (auto& e : edges) {
+        int rootU = find(e.u, dinh), rootV = find(e.v, dinh);
+        if (rootU != rootV) {
+            MST[e.u][e.v] = MST[e.v][e.u] = e.w;
+            dinh[rootU] = rootV;
+        }
+    }
+    cout << "Ma tran ke cay khung (Kruskal):" << endl;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) cout << setw(3) << MST[i][j] << " ";
+        cout << endl;
+    }
+}
+
+int main() {
+    cin >> n;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++) cin >> G[i][j];
+
+    Dijkstra(0); // gsu hnoi la dinh khung
+    Prim();
+    Kruskal();
+    return 0;
+}
